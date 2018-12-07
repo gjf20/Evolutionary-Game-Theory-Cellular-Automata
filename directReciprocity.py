@@ -75,7 +75,7 @@ while count<K:
                         grid[dies[0],dies[1]] = 0
                     elif Cfit[count] > b: #need a check on prolif, cc or stasis threshold
                         prolif = C_ind[count]
-                        if grid[prolif[0]+1,prolif[1]] ==0 & prolif[0]+1<K-1:
+                        if grid[prolif[0]+1,prolif[1]] == 0 & prolif[0]+1<K-1:
                             grid[prolif[0]+1,prolif[1]] = 1
                 elif grid[i+1,j]==2:
                     Cfit[count] = Cfit[count]-cost
