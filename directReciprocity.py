@@ -6,6 +6,8 @@
 
 import numpy as np
 import random
+from enum import Enum
+import inspect
 
 #Set Initial Parameters
 ben = 0.15 #benefit of interacting with a C
@@ -21,6 +23,10 @@ Cfit = np.repeat(Cfit0,K)
 Dfit = np.repeat(Dfit0,K)
 init_counts = C0+D0
 grid = np.zeros((K,K))
+
+EMPTY = 0;
+COOPERATOR = 1;
+DEFECTOR = 2;
 
 #Seed C0,D0
 count = 0
@@ -93,3 +99,87 @@ while count<K:
 
 
 print(grid)
+
+
+def getMooreNeighborhood(self, grid, i, j):
+    neighbors = getVonNeumannNeighborhood(grid, i, j)
+
+    if i-1 < 0 or j+1 >= len(grid[i-1]): #use of grid[i-1] will avoid error in case of a jagged 2d array
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i-1,j+1]) #Northeast
+
+    if i+1 >= len(grid) or j+1 >= len(grid[i+1]): #use of grid[i+1] will avoid error in case of a jagged 2d array
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i+1,j+1]) #Southeast
+
+    if i+1 >= len(grid) or j-1 < 0:
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i+1,j-1]) #Southwest
+
+    if i-1 < 0 or j-1 < 0: #use of grid[i-1] will avoid error in case of a jagged 2d array
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i-1,j-1]) #Northwest
+
+    return neighbors
+
+
+def getVonNeumannNeighborhood(self, grid, i, j):
+    neighbors = []
+    if i-1 < 0:
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i-1,j]) #North
+
+    if j+1 >= len(grid[i]):
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i, j+1]) #East
+
+    if i+1 >= len(grid):
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i+1,j]) #South
+
+    if j-1 < 0:
+        neighbors.append(self.EMPTY)
+    else:
+        neighbors.append(grid[i, j-1]) #West
+
+    return neighbors
+
+class Strategy(Enum):
+    """Strategy is an enum representing how a player will act in the evolution game"""
+    COOPERATOR = 1
+    DEFECTOR = 2
+
+class Player(object):
+    """Player represents a player of the evolution game, it has grid coordinates, fitness level, and a strategy for playing the game"""
+
+    i  #need coordinates to keep track of each pairwise relationship
+    j
+    fitness
+    strat
+
+    def __init__(self, i, j, strategy):
+        super([object Object], self).__init__()
+        self.i = i
+        self.j = j
+        self.fitness = 0
+        self.strat = strat
+
+    def updateFitnessWith(self, neighbors):  #where strategy behaviour is executed
+        for n in neighbors:
+            if isinstance(n, Player):
+                if n.strat == Strategy.COOPERATOR:
+                    self.fitness = self.fitness + coopB  #gets the benefit if the neighbor will cooperate
+                else: # strat is DEFECTOR
+                    self.fitness = self.fitness + 0
+
+                if self.strat == Strategy.COOPERATOR:
+                    self.fitness = self.fitness - coopC  #loses the cost if this player cooperates
+                else:
+                    self.fitness = self.fitness - 0 #no cost if this player defects
