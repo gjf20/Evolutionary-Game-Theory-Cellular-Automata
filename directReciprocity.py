@@ -66,6 +66,7 @@ class Strategy(Enum):
     COOPERATOR = 1
     DEFECTOR = 2
 
+
 coopC = .25
 coopB = .3
 
@@ -145,9 +146,7 @@ def main():
     init_counts = C0+D0
     grid = np.zeros((K,K))
 
-    EMPTY = 0;
-    COOPERATOR = 1;
-    DEFECTOR = 2;
+
 
     #Seed C0,D0
     count = 0
