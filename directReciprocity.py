@@ -137,7 +137,7 @@ class Player(object):
             return str(1)
         else: #DEFECTOR
             return str(2)
-            
+
     def __str__(self):
         if self.strat == Strategy.COOPERATOR:
             return str(1)
@@ -161,8 +161,8 @@ def main():
     grid = np.zeros((K,K))
 
     #success counters?
-
-    print([Player(0,0, Strategy.COOPERATOR)])
+    CoopBirths = 0
+    DefectBirths = 0
 
     #Seed C0,D0
     count = 0
@@ -175,28 +175,28 @@ def main():
         c = random.randint(0,K-1)
         d = random.randint(0,K-1)
         if grid[a,b] == 0:
-            grid[a,b] = 1
-            C_ind.append([a,b])
+            grid[a,b] = Player(a,b,Strategy.COOPERATOR)
+            C_ind.append(grid[a,b])
         else:
             for i in np.arange(0,K-1):
                 for j in np.arange(0,K-1):
                     if grid[i,j] ==0:
                         ind.append([i,j])
-            grid[ind[0][0],ind[0][1]] = 1
-            C_ind.append([ind[0][0],ind[0][1]])
+            grid[ind[0][0],ind[0][1]] = Player(a,b,Strategy.COOPERATOR)
+            C_ind.append(grid[ind[0][0],ind[0][1]])
             ind = []
         count+=1
 
         if grid[c,d] == 0:
-            grid[c,d] = 2
-            D_ind.append([c,d])
+            grid[c,d] = Player(c,d,Strategy.DEFECTOR)
+            D_ind.append(grid[c,d])
         else:
             for i in np.arange(0,K-1):
                 for j in np.arange(0,K-1):
                     if grid[i,j] ==0:
                         ind.append([i,j])
-            grid[ind[0][0],ind[0][1]] = 2
-            D_ind.append([ind[0][0],ind[0][1]])
+            grid[ind[0][0],ind[0][1]] = Player(c,d,Strategy.DEFECTOR)
+            D_ind.append(grid[ind[0][0],ind[0][1]])
             ind = []
         count+=1
     print(grid)
