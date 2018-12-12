@@ -67,6 +67,8 @@ class Strategy(Enum):
     DEFECTOR = 2
 
 
+
+
 coopC = .25
 coopB = .3
 
@@ -130,6 +132,18 @@ class Player(object):
             else:
                 return opponentLastMove  #tit for tat with start on defect, open to change:
 
+    def __repr__(self):
+        if self.strat == Strategy.COOPERATOR:
+            return str(1)
+        else: #DEFECTOR
+            return str(2)
+            
+    def __str__(self):
+        if self.strat == Strategy.COOPERATOR:
+            return str(1)
+        else: #DEFECTOR
+            return str(2)
+
 def main():
     #Set Initial Parameters
     ben = 0.15 #benefit of interacting with a C
@@ -146,7 +160,9 @@ def main():
     init_counts = C0+D0
     grid = np.zeros((K,K))
 
+    #success counters?
 
+    print([Player(0,0, Strategy.COOPERATOR)])
 
     #Seed C0,D0
     count = 0
