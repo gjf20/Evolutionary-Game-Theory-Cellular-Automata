@@ -88,7 +88,7 @@ class Player(object):
 
     def __init__(self, i, j, strategy):
 
-        self.i = i #may not need these
+        self.i = i
         self.j = j
         self.fitness = 0.45
         self.strat = strategy
@@ -108,13 +108,12 @@ class Player(object):
                     self.fitness = self.fitness - coopC  #loses the cost if this player cooperates
                 else:
                     self.fitness = self.fitness - 0 #no cost if this player defects
-
                 n.currOppMoves[n.neighbors.index(self)] = move
 
     def updateFitnessDueToOppMoves(self): # should be called after all players have made their currOppMoves - 2/2 functions where strategy pays off
         for n in self.neighbors:
             if isinstance(n, Player):
-                m = self.currOppMoves[self.neighbors.index[n]]
+                m = self.currOppMoves[self.neighbors.index(n)]
                 if m == 1:
                     self.fitness = self.fitness + coopB # recieves benefit from neighbor cooperating
                 else: #neighbor defected, recieves no benefit
@@ -141,7 +140,7 @@ class Player(object):
         return self.fitness > b
 
     def getRandomEmptyNeighbor(self, grid):
-        count = random.ranint(1, len(self.neighbors)+1)
+        count = random.randint(1, len(self.neighbors)+1)
         origCount = count
         ind = 0
         tries = 0
@@ -229,7 +228,7 @@ def main():
                 for j in np.arange(0,K):
                     if grid[i][j] is None:
                         ind.append([i,j])
-            grid[ind[0][0]][ind[0][1]] = Player(a,b,Strategy.COOPERATOR)
+            grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.COOPERATOR)
             C_ind.append(grid[ind[0][0]][ind[0][1]])
             ind = []
         count+=1
@@ -242,7 +241,7 @@ def main():
                 for j in np.arange(0,K):
                     if grid[i][j] is None:
                         ind.append([i,j])
-            grid[ind[0][0]][ind[0][1]] = Player(c,d,Strategy.DEFECTOR)
+            grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.DEFECTOR)
             D_ind.append(grid[ind[0][0]][ind[0][1]])
             ind = []
         count+=1
@@ -264,11 +263,6 @@ def main():
         for j in np.arange(0, K):
             if grid[i][j] is not None:
                 # this is where we update fitness based on own moves this turn
-                print(grid[i][j].j)
-                print(grid[i][j].i)
-                print(grid[i][j])
-                print(i)
-                print(j)
                 grid[i][j].updateFitnessOwnMove()
     for i in np.arange(0, K):
         for j in np.arange(0, K):
