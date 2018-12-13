@@ -177,20 +177,10 @@ class Player(object):
 
 
     def __repr__(self):
-        if self.strat == Strategy.COOPERATOR:
-            return '   ' + str(1)
-        elif self.strat == Strategy.TITTAT:
-            return '   ' + str(3)
-        else: #DEFECTOR
-            return '   ' + str(2)
+        return '   ' + str(self.strat.value)
 
     def __str__(self):
-        if self.strat == Strategy.COOPERATOR:
-            return  str(1)
-        elif self.strat == Strategy.TITTAT:
-            return str(3)
-        else: #DEFECTOR
-            return  str(2)
+        return str(self.strat.value)
 
 def printGrid(grid):
     for row in grid:

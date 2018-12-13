@@ -124,20 +124,8 @@ class Player(object):
     def chooseMoveDirectReciprocity(self, opponentLastMove): #returns the strategy for this turn  #where strategy behaviour is executed
         if self.strat == Strategy.COOPERATOR:
             return 1
-            '''
-            if opponentLastMove == 0:
-                return 1 # cooperates
-            else:
-                return opponentLastMove   #basically tit for tat, open to change # TODO:
-            '''
         else:
             return 2
-            '''
-            if opponentLastMove == 0:
-                return 2 #defects
-            else:
-                return opponentLastMove  #tit for tat with start on defect, open to change:
-            '''
 
     def shouldDie(self):
         return self.fitness < d
@@ -181,16 +169,10 @@ class Player(object):
 
 
     def __repr__(self):
-        if self.strat == Strategy.COOPERATOR:
-            return '   ' + str(1)
-        else: #DEFECTOR
-            return '   ' + str(2)
+        return '   ' + str(self.strat.value)
 
     def __str__(self):
-        if self.strat == Strategy.COOPERATOR:
-            return  str(1)
-        else: #DEFECTOR
-            return  str(2)
+        return str(self.strat.value)
 
 def printGrid(grid):
     for row in grid:
@@ -323,7 +305,7 @@ def main():
     d = 0.0 #death threshold
     #Run CA
     #Check neighbors and updates fit according to payoff matrix, using standard payoff matrix
-    timesteps = 5
+    timesteps = 15
     while timesteps > 0:
         for i in np.arange(0, K):
             for j in np.arange(0, K):
