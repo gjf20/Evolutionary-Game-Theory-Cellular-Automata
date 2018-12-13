@@ -206,37 +206,32 @@ def printFitnessGrid(grid):
                 line = line + '----  '
         print(line)
 
+def avgFitness(grid, strat):
+    totalFit = 0
+    num = 0
+    for i in np.arange(0, len(grid)):
+        for j in np.arange(0, len(grid[i])):
+            if grid[i][j] is not None and grid[i][j].strat == strat:
+                totalFit += grid[i][j].fitness
+                num += 1
+    if num != 0:
+        return totalFit/num
+    else:
+        return 0
 
-def main():
-    #Set Initial Parameters
-
-    K = 5 #size of grid ie carrying capacity
-    C0 = 5 #labled as 1
-    D0 = 5 #labled as 2
-    Cfit0 = 0.5 #initial fitness of cell type C
-    Dfit0 = 0.5 #initial fitness of cell type D
-    init_counts = C0+D0
-    grid = [[None for s in range(K)] for t in range(K)]
-
-
-    #success counters
-    CoopBirths = 0
-    DefectBirths = 0
-    CoopDeaths = 0
-    DefectDeaths = 0
-
+def randomGrid(grid, init_counts):
     count = 0
     ind = []
     while count < init_counts:
-        a = random.randint(0,K-1)
-        b = random.randint(0,K-1)
-        c = random.randint(0,K-1)
-        d = random.randint(0,K-1)
+        a = random.randint(0,len(grid)-1)
+        b = random.randint(0,len(grid[0])-1)
+        c = random.randint(0,len(grid)-1)
+        d = random.randint(0,len(grid[0])-1)
         if grid[a][b] is None:
             grid[a][b] = Player(a,b,Strategy.COOPERATOR)
         else:
-            for i in np.arange(0,K):
-                for j in np.arange(0,K):
+            for i in np.arange(0,len(grid)):
+                for j in np.arange(0,len(grid[i])):
                     if grid[i][j] is None:
                         ind.append([i,j])
             grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.COOPERATOR)
@@ -246,13 +241,77 @@ def main():
         if grid[c][d] is None:
             grid[c][d] = Player(c,d,Strategy.DEFECTOR)
         else:
-            for i in np.arange(0,K):
-                for j in np.arange(0,K):
+            for i in np.arange(0,len(grid)):
+                for j in np.arange(0,len(grid[i])):
                     if grid[i][j] is None:
                         ind.append([i,j])
             grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.DEFECTOR)
             ind = []
         count+=1
+
+    return grid
+
+def coopGrid(grid, init_counts):
+    count = 0
+    ind = []
+    while count < init_counts:
+        a = random.randint(0,len(grid)-1)
+        b = random.randint(0,len(grid[0])-1)
+        if grid[a][b] is None:
+            grid[a][b] = Player(a,b,Strategy.COOPERATOR)
+        else:
+            for i in np.arange(0,len(grid)):
+                for j in np.arange(0,len(grid[i])):
+                    if grid[i][j] is None:
+                        ind.append([i,j])
+            grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.COOPERATOR)
+            ind = []
+        count+=1
+
+    return grid
+
+def defectGrid(grid, init_counts):
+    count = 0
+    ind = []
+    while count < init_counts:
+        c = random.randint(0,len(grid)-1)
+        d = random.randint(0,len(grid[0])-1)
+
+        if grid[c][d] is None:
+            grid[c][d] = Player(c,d,Strategy.DEFECTOR)
+        else:
+            for i in np.arange(0,len(grid)):
+                for j in np.arange(0,len(grid[i])):
+                    if grid[i][j] is None:
+                        ind.append([i,j])
+            grid[ind[0][0]][ind[0][1]] = Player(ind[0][0],ind[0][1],Strategy.DEFECTOR)
+            ind = []
+        count+=1
+
+    return grid
+
+
+def main():
+    #Set Initial Parameters
+
+    K = 5 #size of grid ie carrying capacity
+    C0 = 5 #labled as 1
+    D0 = 5 #labled as 2
+
+    init_counts = C0+D0
+    grid = [[None for s in range(K)] for t in range(K)]
+
+    grid = randomGrid(grid, init_counts)
+    #grid = coopGrid(grid, init_counts)
+    #grid = defectGrid(grid, init_counts)
+
+    #success counters
+    CoopBirths = 0
+    DefectBirths = 0
+    CoopDeaths = 0
+    DefectDeaths = 0
+
+
 
     print('Initial population: ')
     printGrid(grid)
@@ -295,7 +354,7 @@ def main():
                         birthCoord = grid[i][j].getRandomEmptyNeighbor(grid)
                         if birthCoord != [-1,-1]:
                             grid[birthCoord[0]][birthCoord[1]] = Player(birthCoord[0], birthCoord[1], grid[i][j].strat)
-                            grid[i][j].fitness = grid[i][j].fitness - b
+                            grid[i][j].fitness = grid[i][j].fitness - .45 # subtract 45 to not alter avg fitness
                             if grid[i][j].strat == Strategy.COOPERATOR:
                                 CoopBirths = CoopBirths + 1
                             else:
@@ -310,6 +369,8 @@ def main():
     print(f'DEFECTOR Births: {DefectBirths}')
     print(f'COOPERATOR Deaths: {CoopDeaths}')
     print(f'DEFECTOR Deaths: {DefectDeaths}')
+    print(f'COOPERATOR Average fitness: {avgFitness(grid, Strategy.COOPERATOR)}')
+    print(f'DEFECTOR Average fitness: {avgFitness(grid, Strategy.DEFECTOR)}')
 
 
 
